@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
@@ -14,17 +14,22 @@ import pg from 'pg';
 
 export interface Env {
 	HYPERDRIVE: Hyperdrive;
+	DATABASE_URL: string;
 }
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		const pool = new pg.Pool({
-			connectionString: env?.HYPERDRIVE?.connectionString,
-			max: 1,
-		});
-		const adapter = new PrismaPg(pool);
-		const prisma = new PrismaClient({ adapter } as any);
+		// const pool = new pg.Pool({
+		// 	connectionString: env.DATABASE_URL,
+		// 	max: 1,
+		// });
+		// const adapter = new PrismaPg(pool);
+		// const prisma = new PrismaClient({ adapter } as any);
 
-		return new Response('Hello World!');
+		// const res = await prisma.$queryRaw`select 1+1`;
+
+		const num = new Prisma.Decimal(1.7).round();
+
+		return new Response(num.toString());
 	},
 };
